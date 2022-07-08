@@ -22,6 +22,7 @@ public class PrincipalDetailsService implements UserDetailsService{
     @Autowired
     private UserRepository userRepository;
 
+    // @함수 종료 시 @AuthenticationPrincipal 생성
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("[{}] RCV Username >> {}",getClass().getName(), username);

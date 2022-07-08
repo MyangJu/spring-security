@@ -7,19 +7,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 
 @Entity
-@Data
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -30,6 +29,9 @@ public class User {
     private String password;
     private String email;
     private String role;
+    private String provider;
+    private String providerId;
+
     @CreationTimestamp
     private Timestamp createDate;
 }

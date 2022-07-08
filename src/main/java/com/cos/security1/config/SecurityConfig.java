@@ -1,5 +1,7 @@
 package com.cos.security1.config;
 
+import com.cos.security1.config.oauth.PrincipalOauth2UserSerivce;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.FailFastProblemReporter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // secured 어노테이션 활성화 특정메소드에 Secure 룰을 걸 수 있다.
 //preAuthorize 어노테이션 활성화
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-    
+
+    @Autowired
+    private PrincipalOauth2UserSerivce principalOauth2UserSerivce;
+
     @Bean
     public BCryptPasswordEncoder encodePwd(){
 
@@ -41,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .oauth2Login()
                 .loginPage("/loginForm")// 구글 로그인 후 후처리 필요. Tip: 코드X, 액세스토큰+사용자 프로필정보 O
                 .userInfoEndpoint()
-                .userService(null);
+                .userService(principalOauth2UserSerivce);
 
     }
 }

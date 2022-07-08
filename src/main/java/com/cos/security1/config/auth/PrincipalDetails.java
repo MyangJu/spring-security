@@ -2,11 +2,16 @@ package com.cos.security1.config.auth;
 
 import java.util.Collection;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.cos.security1.model.user.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
 import java.util.ArrayList;
+import java.util.Map;
 // 시큐리티가 /login 주소 요청이 오면 낚아채서 로그인을 진행시킨다.
 // 로그인이 성공하면 session이 만들어진다. (Security ContextHolder)라는 필드를 가지는데 여기에 Session정보를 저장함.
 // 그 안에는 오브젝트 => Authentication 객체가 존재함 ( 이 객체만 들어가야하고 들어가있음 )
@@ -15,12 +20,27 @@ import java.util.ArrayList;
 
 // Security Session => Authentication => UserDetails
 
-public class PrincipalDetails implements UserDetails{
+@Getter
+@Setter
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user;
+    private Map<String, Object> attributes;
 
+    //일반 로그인
     public PrincipalDetails(User user) {
         this.user = user;
+    }
+
+    //OAuth 로그인
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
     }
 
     /*
@@ -74,5 +94,9 @@ public class PrincipalDetails implements UserDetails{
         // TODO Auto-generated method stub
         return true;
     }
-    
+
+    @Override
+    public String getName() {
+        return null;
+    }
 }

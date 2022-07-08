@@ -1,10 +1,15 @@
 package com.cos.security1.controller;
 
+import com.cos.security1.config.auth.PrincipalDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class IndexController {
 
+
     @Autowired
     private IndexService indexService;
 
@@ -31,7 +37,39 @@ public class IndexController {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    
+
+    @GetMapping(value = "/test/login")
+    public @ResponseBody String loginTest(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails){
+        log.info("[{}] /test/login ----------authentication----------",getClass().getName());
+        log.info("[{}] authentication >> {}",getClass().getName(), authentication.getPrincipal());
+        log.info("[{}] /test/login ----------authentication----------",getClass().getName());
+        log.info("AND ");
+        log.info("[{}] /test/login ----------UserDetails----------",getClass().getName());
+        PrincipalDetails principalDetails =  (PrincipalDetails)authentication.getPrincipal();
+        log.info("[{}] authentication >> {}",getClass().getName(), userDetails.getUser());
+        log.info("[{}] /test/login ----------UserDetails----------",getClass().getName());
+
+
+        return "세션정보 확인하기";
+    }
+
+    @GetMapping(value = "/test/oauth/login")
+    public @ResponseBody String oauthLoginTest(Authentication authentication, @AuthenticationPrincipal PrincipalDetails oAuth2){
+        log.info("[{}] /test/oauth/login ----------authentication----------",getClass().getName());
+        log.info("[{}] authentication >> {}",getClass().getName(), authentication.getPrincipal());
+        log.info("[{}] /test/login ----------authentication----------",getClass().getName());
+        log.info("AND ");
+        log.info("[{}] /test/login ----------UserDetails----------",getClass().getName());
+//        OAuth2User oAuth2User =  (OAuth2User)authentication.getPrincipal();
+//        log.info("[{}] authentication >> {}",getClass().getName(), oAuth2User.getAttributes());
+//        log.info("[{}] /test/login ----------UserDetails----------",getClass().getName());
+        log.info("[{}] authentication >> {}",getClass().getName(), oAuth2.getAttributes());
+        log.info("[{}] /test/login ----------UserDetails----------",getClass().getName());
+
+
+        return "OAuth 세션정보 확인하기";
+    }
+
     //머스테치 기본폴더 src/main/resources/
 
     @GetMapping(value="/")
@@ -40,8 +78,10 @@ public class IndexController {
     }
     
     @GetMapping(value="/user")
-    public @ResponseBody String user() {
-        return new String("user");
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        log.info("[{}] OAuth2 User >> {}", getClass().getName(), principalDetails.getUser());
+        return principalDetails.getUser().toString();
     }
 
     @GetMapping(value="/admin")
