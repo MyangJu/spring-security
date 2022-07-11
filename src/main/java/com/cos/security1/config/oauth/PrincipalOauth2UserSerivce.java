@@ -33,11 +33,12 @@ public class PrincipalOauth2UserSerivce extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         log.info("[{}] LoadUser >> {}", getClass().getName(), userRequest.getClientRegistration());
-        log.info("[{}] LoadUser >> {}", getClass().getName(), userRequest.getAccessToken());
+        log.info("[{}] LoadUser >> {}", getClass().getName(), userRequest.getAccessToken().getTokenValue());
         log.info("[{}] LoadUser >> {}", getClass().getName(), userRequest.getClientRegistration().getProviderDetails());
-        log.info("[{}] LoadUser >> {}", getClass().getName(), super.loadUser(userRequest).getAttributes());
+//        log.info("[{}] LoadUser >> {}", getClass().getName(), super.loadUser(userRequest).getAttributes());
 
         Map<String, Object> oAuth2userAttribute = super.loadUser(userRequest).getAttributes();
+
         String provider                         = userRequest.getClientRegistration().getRegistrationId(); // "google"
         OAuth2UserInfo oAuth2UserInfo           = null;
 
